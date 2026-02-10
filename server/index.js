@@ -12,7 +12,7 @@ const connectDB = require("./config/db");
 const authRoutes = require("./routes/auth");
 const bookingRoutes = require("./routes/bookings");
 const serviceRoutes = require("./routes/services");
-
+const contactRoutes = require("./routes/contact");
 const app = express();
 
 // Connect to MongoDB
@@ -32,6 +32,8 @@ app.use((req, res, next) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/services", serviceRoutes);
+app.use("/api/contact", contactRoutes);
+app.use("/api/admin/dashboard", require("./routes/adminRoutes"));
 
 // Health check route
 app.get("/api/health", (req, res) => {

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { bookingsAPI, authAPI } from '../../utils/api';
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { bookingsAPI, authAPI } from "../../utils/api";
 
 /**
  * Admin Dashboard - View, update, delete bookings
@@ -9,8 +9,8 @@ const AdminDashboard = () => {
   const navigate = useNavigate();
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [message, setMessage] = useState({ type: '', text: '' });
+  const [error, setError] = useState("");
+  const [message, setMessage] = useState({ type: "", text: "" });
   const [updatingId, setUpdatingId] = useState(null);
 
   useEffect(() => {
@@ -21,33 +21,33 @@ const AdminDashboard = () => {
     try {
       const { data } = await bookingsAPI.getAll();
       setBookings(data);
-      setError('');
+      setError("");
     } catch (err) {
-      setError(err.response?.data?.error || 'Failed to load bookings');
+      setError(err.response?.data?.error || "Failed to load bookings");
     } finally {
       setLoading(false);
     }
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('adminToken');
-    navigate('/admin');
+    localStorage.removeItem("adminToken");
+    navigate("/admin");
   };
 
   const handleStatusChange = async (id, newStatus) => {
     setUpdatingId(id);
-    setMessage({ type: '', text: '' });
+    setMessage({ type: "", text: "" });
 
     try {
       await bookingsAPI.update(id, { status: newStatus });
       setBookings((prev) =>
-        prev.map((b) => (b._id === id ? { ...b, status: newStatus } : b))
+        prev.map((b) => (b._id === id ? { ...b, status: newStatus } : b)),
       );
-      setMessage({ type: 'success', text: 'Status updated successfully' });
+      setMessage({ type: "success", text: "Status updated successfully" });
     } catch (err) {
       setMessage({
-        type: 'error',
-        text: err.response?.data?.error || 'Failed to update status',
+        type: "error",
+        text: err.response?.data?.error || "Failed to update status",
       });
     } finally {
       setUpdatingId(null);
@@ -55,19 +55,20 @@ const AdminDashboard = () => {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this booking?')) return;
+    if (!window.confirm("Are you sure you want to delete this booking?"))
+      return;
 
     setUpdatingId(id);
-    setMessage({ type: '', text: '' });
+    setMessage({ type: "", text: "" });
 
     try {
       await bookingsAPI.delete(id);
       setBookings((prev) => prev.filter((b) => b._id !== id));
-      setMessage({ type: 'success', text: 'Booking deleted successfully' });
+      setMessage({ type: "success", text: "Booking deleted successfully" });
     } catch (err) {
       setMessage({
-        type: 'error',
-        text: err.response?.data?.error || 'Failed to delete booking',
+        type: "error",
+        text: err.response?.data?.error || "Failed to delete booking",
       });
     } finally {
       setUpdatingId(null);
@@ -75,19 +76,26 @@ const AdminDashboard = () => {
   };
 
   const statusColors = {
-    pending: 'bg-amber-500/20 text-amber-400 border-amber-500/50',
-    confirmed: 'bg-blue-500/20 text-blue-400 border-blue-500/50',
-    'in-progress': 'bg-primary-500/20 text-primary-400 border-primary-500/50',
-    completed: 'bg-green-500/20 text-green-400 border-green-500/50',
-    cancelled: 'bg-red-500/20 text-red-400 border-red-500/50',
+    pending: "bg-amber-500/20 text-amber-400 border-amber-500/50",
+    confirmed: "bg-blue-500/20 text-blue-400 border-blue-500/50",
+    "in-progress": "bg-primary-500/20 text-primary-400 border-primary-500/50",
+    completed: "bg-green-500/20 text-green-400 border-green-500/50",
+    cancelled: "bg-red-500/20 text-red-400 border-red-500/50",
   };
 
-  const vehicleTypeLabels = { car: 'Car', bike: 'Bike', suv: 'SUV', other: 'Other' };
+  const vehicleTypeLabels = {
+    car: "Car",
+    bike: "Bike",
+    suv: "SUV",
+    other: "Other",
+  };
 
   if (loading) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
-        <div className="animate-pulse text-primary-500 font-display">Loading bookings...</div>
+        <div className="animate-pulse text-primary-500 font-display">
+          Loading bookings...
+        </div>
       </div>
     );
   }
@@ -102,6 +110,12 @@ const AdminDashboard = () => {
             <p className="text-gray-400">Manage bookings</p>
           </div>
           <div className="flex gap-4">
+            <Link
+              to="/admin/messages"
+              className="btn-secondary py-2 px-4 text-sm flex items-center"
+            >
+              View Messages
+            </Link>
             <button
               onClick={fetchBookings}
               className="btn-secondary py-2 px-4 text-sm"
@@ -121,9 +135,9 @@ const AdminDashboard = () => {
         {message.text && (
           <div
             className={`mb-6 p-4 rounded-lg ${
-              message.type === 'success'
-                ? 'bg-primary-500/20 text-primary-400 border border-primary-500/50'
-                : 'bg-red-500/20 text-red-400 border border-red-500/50'
+              message.type === "success"
+                ? "bg-primary-500/20 text-primary-400 border border-primary-500/50"
+                : "bg-red-500/20 text-red-400 border border-red-500/50"
             }`}
           >
             {message.text}
@@ -142,20 +156,40 @@ const AdminDashboard = () => {
             <table className="w-full">
               <thead>
                 <tr className="border-b border-dark-700 bg-dark-800/50">
-                  <th className="text-left py-4 px-6 text-gray-400 font-medium">Customer</th>
-                  <th className="text-left py-4 px-6 text-gray-400 font-medium">Phone</th>
-                  <th className="text-left py-4 px-6 text-gray-400 font-medium">Vehicle</th>
-                  <th className="text-left py-4 px-6 text-gray-400 font-medium">Service</th>
-                  <th className="text-left py-4 px-6 text-gray-400 font-medium">Date</th>
-                  <th className="text-left py-4 px-6 text-gray-400 font-medium">Status</th>
-                  <th className="text-left py-4 px-6 text-gray-400 font-medium">Actions</th>
+                  <th className="text-left py-4 px-6 text-gray-400 font-medium">
+                    Customer
+                  </th>
+                  <th className="text-left py-4 px-6 text-gray-400 font-medium">
+                    Phone
+                  </th>
+                  <th className="text-left py-4 px-6 text-gray-400 font-medium">
+                    Vehicle
+                  </th>
+                  <th className="text-left py-4 px-6 text-gray-400 font-medium">
+                    Service
+                  </th>
+                  <th className="text-left py-4 px-6 text-gray-400 font-medium">
+                    Date
+                  </th>
+                  <th className="text-left py-4 px-6 text-gray-400 font-medium">
+                    Status
+                  </th>
+                  <th className="text-left py-4 px-6 text-gray-400 font-medium">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {bookings.length === 0 ? (
                   <tr>
                     <td colSpan={7} className="py-12 text-center text-gray-500">
-                      No bookings yet. <Link to="/booking" className="text-primary-500 hover:underline">Create one</Link>
+                      No bookings yet.{" "}
+                      <Link
+                        to="/booking"
+                        className="text-primary-500 hover:underline"
+                      >
+                        Create one
+                      </Link>
                     </td>
                   </tr>
                 ) : (
@@ -167,14 +201,17 @@ const AdminDashboard = () => {
                       <td className="py-4 px-6">
                         <p className="font-medium text-white">{booking.name}</p>
                       </td>
-                      <td className="py-4 px-6 text-gray-400">{booking.phone}</td>
+                      <td className="py-4 px-6 text-gray-400">
+                        {booking.phone}
+                      </td>
                       <td className="py-4 px-6">
                         <span className="text-gray-400">
-                          {vehicleTypeLabels[booking.vehicleType]} - {booking.vehicleModel}
+                          {vehicleTypeLabels[booking.vehicleType]} -{" "}
+                          {booking.vehicleModel}
                         </span>
                       </td>
                       <td className="py-4 px-6 text-gray-400">
-                        {booking.service?.name || 'N/A'}
+                        {booking.service?.name || "N/A"}
                       </td>
                       <td className="py-4 px-6 text-gray-400">
                         {new Date(booking.date).toLocaleDateString()}
@@ -182,7 +219,9 @@ const AdminDashboard = () => {
                       <td className="py-4 px-6">
                         <select
                           value={booking.status}
-                          onChange={(e) => handleStatusChange(booking._id, e.target.value)}
+                          onChange={(e) =>
+                            handleStatusChange(booking._id, e.target.value)
+                          }
                           disabled={updatingId === booking._id}
                           className={`px-3 py-1 rounded text-sm font-medium border ${
                             statusColors[booking.status]
@@ -213,7 +252,10 @@ const AdminDashboard = () => {
         </div>
 
         <p className="mt-6 text-center">
-          <Link to="/" className="text-primary-500 hover:text-primary-400 text-sm">
+          <Link
+            to="/"
+            className="text-primary-500 hover:text-primary-400 text-sm"
+          >
             ← Back to website
           </Link>
         </p>
