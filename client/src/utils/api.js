@@ -59,4 +59,9 @@ export const servicesAPI = {
   getOne: (id) => api.get(`/api/services/${id}`),
 };
 
+// Contact messages API (admin)
+export const messagesAPI = {
+  getAll: () => api.get('/api/admin/dashboard/messages'),
+};
+
 export default api;

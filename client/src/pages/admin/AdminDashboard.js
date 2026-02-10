@@ -102,6 +102,12 @@ const AdminDashboard = () => {
             <p className="text-gray-400">Manage bookings</p>
           </div>
           <div className="flex gap-4">
+            <Link
+              to="/admin/messages"
+              className="btn-secondary py-2 px-4 text-sm flex items-center"
+            >
+              View Messages
+            </Link>
             <button
               onClick={fetchBookings}
               className="btn-secondary py-2 px-4 text-sm"

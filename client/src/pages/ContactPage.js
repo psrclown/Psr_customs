@@ -18,14 +18,38 @@ const ContactPage = () => {
     setMessage({ type: "", text: "" });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Demo: In production, you'd send this to backend
-    setMessage({
-      type: "success",
-      text: "Thank you for reaching out! We will get back to you soon.",
-    });
-    setFormData({ name: "", email: "", subject: "", message: "" });
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setMessage({
+          type: "success",
+          text: "Message sent successfully!",
+        });
+        setFormData({ name: "", email: "", subject: "", message: "" });
+      } else {
+        setMessage({
+          type: "error",
+          text: data.message || "Something went wrong",
+        });
+      }
+    } catch (error) {
+      setMessage({
+        type: "error",
+        text: "Server not reachable",
+      });
+    }
   };
 
   const whatsappNumber = "919876543210"; // Replace with actual number
